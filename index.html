@@ -1,0 +1,140 @@
+<!-- CS 3300 Project 2 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<title>
+    CS3300 - Project 2
+    Cody Leung  | cpL28
+    Carolyn Shi | cs947
+    Yingda Du   | yd275
+</title>
+
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="http://d3js.org/topojson.v2.min.js"></script>
+
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/bebas_neue/bebas_neue.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <h1 id="title" class="centertext">Baby Names in the United States of America</h1>
+    <h4 id="subtitle" class="centertext">Count of each U.S. Baby Name per Year</h4>
+
+    <div id="description">
+        <h3>Description:</h3>
+        <p>Our project researched and visualized how the frequency of baby names have fluctuated over time, with analysis starting in 1990. We grabbed the top baby names for each year, and filtered them by state or by year overall. Users can interactively choose 'By State' or 'By Year' to get a closer look at subtleties.</p>
+    </div>
+
+    <div class="tab-pane">
+        <ul class="nav nav-tabs">
+            <li class="active" id="atab">
+                <a href="#a_tab" data-toggle="tab">By State: 1990-2014</a>
+            </li>
+            <li id="btab">
+                <a href="#b_tab" data-toggle="tab">By Year: 2000-2014</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="a_tab">
+                <h3>What You Can Do:</h3>
+                <ul>
+                    <li><u>Sex</u>: select 'boy' or 'girl' to filter by sex.</li>
+                    <li><u>Year</u>: select year on slider to filter baby names by year.</li>
+                    <li><u>Name</u>: click on a baby name in left map to show frequency on U.S. map.</li>
+                    <li><u>States</u>: after clicking on name, hover over circles on U.S. map to show number of babies with that name in that state.</li>
+                    <li><u>Bar</u>: click on a bar in bar graph to show the corresponding states with that baby name. </li>
+                </ul>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div id='gender'>
+                            <span id='girls' class='gender selected'>Girl names</span>
+                            <span id='boys' class='gender'>Boy names</span>
+                        </div>
+                        <div id='slider'></div>
+                        <div id='chart'> </div>
+                        <div id='scale'></div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div id='map'>
+                        <p id='maptitle' class="centertext"></p>
+                        <p id='selected-name' class="centertext"></p>
+                    </div>
+                    <hr>
+                    <div id='list'> 
+                        <p id='bartitle' class="centertext"></p>
+                    </div>
+                    </div>
+                </div>
+                <hr>
+                <h3>What this tells us:</h3>
+                <ul>
+                    <li><u>Treemap (left)</u>: The top baby names per year, by state, are shown in the rectangle treemap in the visual to the left. The different colors separate the baby names by first letter. The larger the rectangle, the higher frequency of babies were named that corresponding name.</li>
+                    <li><u>U.S. Map (top-right)</u>: The U.S. map in the top right shows the states that have the most number of babies named the selected name. This gives us a good visualization of where in the U.S. the baby name is most dense, and the viewer can possible correlate that to other factors. A state does not have a circle if the name chosen does not fall under the states top 20 names by popularity.</li>
+                    <li><u>Bar graph (bottom-left)</u>: The bar graph in the bottom right shows the top 10 names of the selected year. This helps to group all of the top names together by year, and not by state. The viewer is able to see overall which baby names were most abundant for the selected year.</li>
+                </ul>
+            </div>
+
+            </div>
+            <div class="tab-pane inactive" id="b_tab">
+                <h3>What You Can Do:</h3>
+                <ul>
+                    <li><u>Year</u>: select year on slider to filter baby names by year.</li>
+                    <li><u>Name</u>: click on a name and the line graph highlights the corresponding line.</li>
+                    <li><u>Name</u>: drag a name in left box for a ~cool~ animation.</li>
+                    <li><u>Line</u>: hover over a line on line graph to show the corresponding baby name (in year selected).</li>
+                    <li><u>Line</u>: after clicking on a name, hover over points on line to show year and frequency</li>
+                </ul>
+                <div class="row">
+                    <div class="col-lg-6">
+                       <hr></hr>  
+                       <div id='year_slider'></div>
+                       <div id="wordcloud"></div>
+                    </div>
+                    <div class="col-lg-6">
+                       <hr></hr>
+                       <div id="scatter"></div>
+                    </div>
+                </div>
+                <hr>
+                <h3>What this tells us:</h3>
+                <ul>
+                    <li><u>Word Cloud (left)</u>: The top baby names overall (all of U.S.) per year selected are shown in the graph to the left. A larger font size means a higher number of babies were named that name in the selected year.</li>
+                    <li><u>Line Graph (right)</u>: The trend line graph of the baby names to the right shows the trend in baby names from 2000-2014 for those baby names in the year selected. This tells us that during certain years, baby names were most frequent while other years they were not. This allows us to see if there is a correlation with a world event during a certain year that caused the baby names to increase (or decrease).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        d3.select("#atab").on('click', function() {
+            d3.select("#btab")
+                .attr('class', '');
+            d3.select("#atab")
+                .attr('class', 'active');
+
+            d3.select("#b_tab")
+                .attr('class', 'inactive');
+            d3.select("#a_tab")
+                .attr('class', 'active');
+        });
+
+        d3.select("#btab").on('click', function() {
+            d3.select("#atab")
+                .attr('class', '');
+            d3.select("#btab")
+                .attr('class', 'active');
+
+            d3.select("#a_tab")
+                .attr('class', 'inactive');
+            d3.select("#b_tab")
+                .attr('class', 'active');
+        });
+    </script>
+
+    <script src="state.js"></script>
+    <script src="year.js"></script>
+</body>
+</html>
